@@ -9,7 +9,7 @@
 #import "ViewController.h"
 #import "CustomTableViewCell.h"
 
-@interface ViewController ()
+@interface ViewController () <CustomTableCellDelegate>
 
 @property (nonatomic, assign) NSInteger value;
 
@@ -43,6 +43,7 @@
             CustomTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([CustomTableViewCell class])];
             if (!cell) {
                 cell = [[CustomTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSStringFromClass([CustomTableViewCell class])];
+                cell.delegate = self;
             }
             return cell;
             break;
@@ -52,4 +53,12 @@
     return nil;
 }
 
+- (void)cellButtonPressed:(UIButton *)button {
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    if (button.tag == 1) {
+        cell.textLabel.text = [NSString stringWithFormat: @"%ld", cell.textLabel.text.integerValue + 1];
+    } else {
+        cell.textLabel.text = [NSString stringWithFormat: @"%ld", cell.textLabel.text.integerValue - 1];
+    }
+}
 @end

@@ -14,22 +14,37 @@
 
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-        [button setTitle:@"Add 1" forState:UIControlStateNormal];
-        button.frame = CGRectMake(220, 5, 100, 34);
-        button.backgroundColor = [UIColor grayColor];
-        button.tintColor = [UIColor whiteColor];
+        UIButton *incrementButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [incrementButton setTitle:@"Add 1" forState:UIControlStateNormal];
+        incrementButton.backgroundColor = [UIColor greenColor];
+        [incrementButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [incrementButton setTranslatesAutoresizingMaskIntoConstraints:NO];
      
-        [button addTarget:self action:@selector(selectedAdd:) forControlEvents:UIControlEventTouchUpInside];
+        [incrementButton addTarget:self action:@selector(selectedButton:) forControlEvents:UIControlEventTouchUpInside];
+        incrementButton.tag = 1;
         
-        [self addSubview:button];
+        [self.contentView addSubview:incrementButton];
+        
+        UIButton *decrementButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [decrementButton setTitle:@"Minus 1" forState:UIControlStateNormal];
+        decrementButton.backgroundColor = [UIColor redColor];
+        [decrementButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [decrementButton setTranslatesAutoresizingMaskIntoConstraints:NO];
+        
+        [decrementButton addTarget:self action:@selector(selectedButton:) forControlEvents:UIControlEventTouchUpInside];
+        decrementButton.tag = 2;
+        [self.contentView addSubview:decrementButton];
+        
+        NSDictionary *viewsDictionary = NSDictionaryOfVariableBindings(incrementButton,decrementButton);
+        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[decrementButton(100)]-(>=8)-[incrementButton(==decrementButton)]-|" options:NSLayoutFormatAlignAllCenterY metrics:0 views:viewsDictionary]];
+        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[decrementButton]-|" options:0 metrics:0 views:viewsDictionary]];
     }
     return self;
     
 }
 
-- (IBAction)selectedAdd:(id)sender {
-
+- (void)selectedButton:(UIButton *)button {
+    [self.delegate cellButtonPressed:button];
 }
 
 @end
